@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:alpha="0.4"
+        android:alpha="0.2"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/daya_medika" />
 
