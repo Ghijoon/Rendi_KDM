@@ -3,36 +3,46 @@ package com.ghijoon.klinikdayamedika;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.w3c.dom.Document;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private MapDirection mapDirection;
 
     LocationManager locationManager;
     LocationListener locationListener;
+
+    LatLng dayaMedika = new LatLng(-6.189729, 106.763902);
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -52,9 +62,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        mapDirection = new MapDirection();
     }
 
 
@@ -82,6 +96,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Lokasi Anda Di sini"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+
+                drawRoute(userLocation, dayaMedika);
 
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
@@ -144,7 +160,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Lokasi Anda Di sini"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15));
+                drawRoute(userLocation, dayaMedika);
             }
         }
     }
-}
+
+    private void drawRoute(LatLng from, LatLng to)
+    {
+        LatLng fromTo[] = { from, to };
+        // Pakai AsyncTask untuk menghindari error exception
+        new getDirection().execute(fromTo);
+    }
+
+    private class getDirection extends AsyncTask<LatLng, Void, Document> {
+
+        @Override
+        protected Document doInBackground(LatLng... params)
+        {
+            Document document = mapDirection.getDocument(params[0], params[1], MapDirection.MODE_DRIVING);
+            return document;
+        }
+
+        @Override
+        protected void onPostExecute(Document result)
+        {
+            setResult(result);
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values)
+        {
+
+        }
+    }
+
+    public void setResult(Document document)
+    {
+        int duration = mapDirection.getDurationValue(document);
+        String distance = mapDirection.getDistanceText(document);
+        String start_address = mapDirection.getStartAddress(document);
+        String copy_right = mapDirection.getCopyRights(document);
+
+        // Ambil point direction / rute
+        ArrayList<LatLng> directionPoint = mapDirection.getDirection(document);
+
+        // Set konfigurasi rute
+        PolylineOptions rectLine = new PolylineOptions().width(3).color(Color.RED);
+
+        for (int i = 0; i < directionPoint.size(); i++)
+        {
+            rectLine.add(directionPoint.get(i));
+        }
+
+        mMap.addPolyline(rectLine);
+    }}
