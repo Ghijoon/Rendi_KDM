@@ -16,11 +16,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -62,13 +62,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
         mapDirection = new MapDirection();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+        mapFragment.getMapAsync(this);
     }
 
 
@@ -95,6 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Lokasi Anda Di sini"));
+                mMap.addMarker(new MarkerOptions().position(dayaMedika).title("Klinik Daya Medika"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
 
                 drawRoute(userLocation, dayaMedika);
@@ -155,12 +156,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location lastKnowLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                LatLng userLocation = new LatLng(lastKnowLocation.getLatitude(), lastKnowLocation.getLongitude());
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(userLocation).title("Lokasi Anda Di sini"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15));
-                drawRoute(userLocation, dayaMedika);
+                Location lastKnowLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                if(lastKnowLocation != null)
+                {
+                    LatLng userLocation = new LatLng(lastKnowLocation.getLatitude(), lastKnowLocation.getLongitude());
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(userLocation).title("Lokasi Anda Di sini"));
+                    mMap.addMarker(new MarkerOptions().position(dayaMedika).title("Klinik Daya Medika"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,15));
+                    drawRoute(userLocation, dayaMedika);
+                }
             }
         }
     }
@@ -211,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<LatLng> directionPoint = mapDirection.getDirection(document);
 
         // Set konfigurasi rute
-        PolylineOptions rectLine = new PolylineOptions().width(3).color(Color.RED);
+        PolylineOptions rectLine = new PolylineOptions().width(5).color(Color.RED);
 
         for (int i = 0; i < directionPoint.size(); i++)
         {
