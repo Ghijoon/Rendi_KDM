@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Klinik Daya Medika.iml" filepath="$PROJECT_DIR$/Klinik Daya Medika.iml" />
       <module fileurl="file://$PROJECT_DIR$/KlinikDayaMedika.iml" filepath="$PROJECT_DIR$/KlinikDayaMedika.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
