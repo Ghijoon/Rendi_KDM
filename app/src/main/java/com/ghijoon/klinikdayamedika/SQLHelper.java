@@ -19,12 +19,18 @@ import android.widget.Toast;
 public class SQLHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "dayamedika.sqlite";
     private static final int DB_VERSION = 1;
-    private static String DB_PATH = "/data/data/com.ghijoon.klinikdayamedika/databases/";
+
+    private static String DB_PATH = null;
     private Context myContext;
 
     public SQLHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         // TODO Auto-generated constructor stub
+        if(android.os.Build.VERSION.SDK_INT >= 17){
+            DB_PATH = context.getApplicationInfo().dataDir + "/databases/";
+        } else {
+            DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
+        }
         myContext=context;
     }
 
