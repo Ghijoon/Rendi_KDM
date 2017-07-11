@@ -1,7 +1,7 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
 
 import java.io.FileOutputStream;
@@ -16,22 +16,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-public class SQLHelper {
-    private static final String DATABASE_NAME = "dayamedika.sqlite";
-    private static final int DATABASE_VERSION = 1;
+public class SQLHelper extends SQLiteOpenHelper {
+    private static final String DB_NAME = "dayamedika.sqlite";
+    private static final int DB_VERSION = 1;
     private static String DB_PATH = "/data/data/com.ghijoon.klinikdayamedika/databases/";
     private Context myContext;
 
     public SQLHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
         // TODO Auto-generated constructor stub
         myContext=context;
     }
 
     public void createDataBase() throws IOException{
-        if(DataBaseisExist()){
+        if(isDatabaseExist()){
             //do nothing - database already exist
-            Toast.makeText(myContext, "Database Sudah Ada", Toast.LENGTH_LONG).show();
         }
         else{
             //By calling this method and empty database will be created into the default system path
@@ -40,7 +39,6 @@ public class SQLHelper {
 
             try {
                 copyDataBase();
-                Toast.makeText(myContext, "Database Berhasil Diimport Dari Assets", Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }
@@ -48,14 +46,13 @@ public class SQLHelper {
 
     }
 
-    private boolean DataBaseisExist(){
+    private boolean isDatabaseExist(){
         SQLiteDatabase checkDB = null;
         try{
-            String myPath = DB_PATH + DATABASE_NAME;
+            String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
         }catch(SQLiteException e){
-            //database does't exist yet.
+            //database doesn't exist yet.
         }
         if(checkDB != null){
             checkDB.close();
@@ -65,9 +62,9 @@ public class SQLHelper {
 
     private void copyDataBase() throws IOException{
         //Open your local db as the input stream
-        InputStream myInput = myContext.getAssets().open(DATABASE_NAME);
+        InputStream myInput = myContext.getAssets().open(DB_NAME);
         // Path to the just created empty db
-        String outFileName = DB_PATH + DATABASE_NAME;
+        String outFileName = DB_PATH + DB_NAME;
         //Open the empty db as the output stream
         OutputStream myOutput = new FileOutputStream(outFileName);
         //transfer bytes from the inputfile to the outputfile

@@ -1,7 +1,7 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
 
 import org.json.JSONArray;
@@ -12,7 +12,7 @@ import android.location.Location;
 public class HitungBobotTambahSimpul {
     double bobot = 0;
 
-    public void Hitung_Bobot_Tambah_Simpul(int index, int limit, JSONArray jArrCoordinates) throws JSONException{
+    public void hitungBobotTambahSimpul(int index, int limit, JSONArray jArrCoordinates) throws JSONException{
 
         // cuma dijalanin sekali, kalo limit 1, maka 1-0 = 0
         // 0 == 0 (limit)

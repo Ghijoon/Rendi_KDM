@@ -1,10 +1,8 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
-
-import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +12,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 
 public class TambahSimpul {
     protected Cursor cursor;
@@ -117,7 +114,7 @@ public class TambahSimpul {
         // pecah koordinat dari AWAL->TENGAH
         int limit = index_koordinat_json;
         HitungBobotTambahSimpul ct = new HitungBobotTambahSimpul();
-        ct.Hitung_Bobot_Tambah_Simpul(0, limit, jArrCoordinates); // 0, koordinat tengah, jSON coordinates
+        ct.hitungBobotTambahSimpul(0, limit, jArrCoordinates); // 0, koordinat tengah, jSON coordinates
 
         //replace array graph[5][0] = 6->888.6
         graph[baris][kolom] = (max_simpul_db+1)+"->"+ct.bobot;
@@ -125,7 +122,7 @@ public class TambahSimpul {
 
         int start_loop = 0;
         // buat dan simpan (new record) json koordinat yang baru ke DB
-        createAndSave_NewJsonCoordinate(start_loop, limit, jArrCoordinates, increase_row_id, baris, (max_simpul_db + 1), ct.bobot,
+        createAndSaveNewJsonCoordinate(start_loop, limit, jArrCoordinates, increase_row_id, baris, (max_simpul_db + 1), ct.bobot,
                 dbInsert, dbRead); // 501 : index record baru
 
 
@@ -136,14 +133,14 @@ public class TambahSimpul {
         // pecah koordinat dari TENGAH->AKHIR
         int start_loop1 = index_koordinat_json;
         int limit1 = (jArrCoordinates.length() - 1); // - 1 karena array mulai dari 0
-        ct.Hitung_Bobot_Tambah_Simpul(index_koordinat_json, limit1, jArrCoordinates); // coordinate tengah sampai akhir
+        ct.hitungBobotTambahSimpul(index_koordinat_json, limit1, jArrCoordinates); // coordinate tengah sampai akhir
 
 
         // new array graph[6][0] = 4->777.4
         graph[(max_simpul_db+1)][0] = nodes1 + "->" + ct.bobot; //didefinisikan [0] karena index baru di graph[][]
 
         // buat dan simpan (new record) json koordinate yang baru ke DB
-        createAndSave_NewJsonCoordinate(start_loop1, limit1, jArrCoordinates, ++increase_row_id, (max_simpul_db + 1), nodes1, ct.bobot,
+        createAndSaveNewJsonCoordinate(start_loop1, limit1, jArrCoordinates, ++increase_row_id, (max_simpul_db + 1), nodes1, ct.bobot,
                 dbInsert, dbRead); // 502 : index record baru
 
 
@@ -198,7 +195,7 @@ public class TambahSimpul {
 
         // pecah koordinat dari AWAL->TENGAH
         int index_dobel_koordinat_json = ( (jArrCoordinates1.length()-1) - index_koordinat_json );
-        ct.Hitung_Bobot_Tambah_Simpul(0, index_dobel_koordinat_json, jArrCoordinates1); // 0, koordinat awal ke tengah, JSONArray coordinate
+        ct.hitungBobotTambahSimpul(0, index_dobel_koordinat_json, jArrCoordinates1); // 0, koordinat awal ke tengah, JSONArray coordinate
 
         //replace array graph[4][0] = 6->777.4
         graph[baris1][kolom1] = (max_simpul_db+1)+"->"+ct.bobot;
@@ -206,7 +203,7 @@ public class TambahSimpul {
 
         // buat dan simpan (new record) json koordinate yang baru ke DB
         int start_loop2 = 0;
-        createAndSave_NewJsonCoordinate(start_loop2, index_dobel_koordinat_json, jArrCoordinates1, ++increase_row_id, baris1, (max_simpul_db + 1), ct.bobot,
+        createAndSaveNewJsonCoordinate(start_loop2, index_dobel_koordinat_json, jArrCoordinates1, ++increase_row_id, baris1, (max_simpul_db + 1), ct.bobot,
                 dbInsert, dbRead); // 503 : index record baru
 
 
@@ -216,13 +213,13 @@ public class TambahSimpul {
 
         // pecah koordinat dari TENGAH->AKHIR
         int limit2 = (jArrCoordinates1.length() - 1); // - 1 karena array mulai dari 0
-        ct.Hitung_Bobot_Tambah_Simpul(index_dobel_koordinat_json, limit2, jArrCoordinates1); // koordinat tengah sampai akhir
+        ct.hitungBobotTambahSimpul(index_dobel_koordinat_json, limit2, jArrCoordinates1); // koordinat tengah sampai akhir
 
         //replace array graph[6][1] = 5->888.6
         graph[(max_simpul_db+1)][1] = t_nodes1+"->"+ct.bobot; // didefinisikan [1] karena sdh ada index 0 di graph[][]
 
         // buat dan simpan (new record) json koordinate yang baru ke DB
-        createAndSave_NewJsonCoordinate(index_dobel_koordinat_json, limit2, jArrCoordinates1, ++increase_row_id, (max_simpul_db + 1), t_nodes1, ct.bobot,
+        createAndSaveNewJsonCoordinate(index_dobel_koordinat_json, limit2, jArrCoordinates1, ++increase_row_id, (max_simpul_db + 1), t_nodes1, ct.bobot,
                 dbInsert, dbRead); // 503 : index record baru
 
 
@@ -318,7 +315,7 @@ public class TambahSimpul {
         System.out.println("single awal->tengah");
         int limit = index_koordinat_json;
         HitungBobotTambahSimpul ct = new HitungBobotTambahSimpul();
-        ct.Hitung_Bobot_Tambah_Simpul(0, limit, jArrCoordinates); // 0, koordinat tengah, jSON coordinates
+        ct.hitungBobotTambahSimpul(0, limit, jArrCoordinates); // 0, koordinat tengah, jSON coordinates
 
         //replace array graph[5][0] = 6->888.6
         graph[baris][kolom] = (max_simpul_db+1)+"->"+ct.bobot;
@@ -327,7 +324,7 @@ public class TambahSimpul {
         int start_loop = 0;
 
         // buat dan simpan (new record) json koordinat yang baru ke DB
-        createAndSave_NewJsonCoordinate(start_loop, limit, jArrCoordinates, increase_row_id, baris, (max_simpul_db + 1), ct.bobot,
+        createAndSaveNewJsonCoordinate(start_loop, limit, jArrCoordinates, increase_row_id, baris, (max_simpul_db + 1), ct.bobot,
                 dbInsert, dbRead); // 501 : index record baru
 
         // reset bobot
@@ -337,14 +334,14 @@ public class TambahSimpul {
         // pecah koordinat dari TENGAH->AKHIR
         int start_loop1 = index_koordinat_json; // - 1 karena array mulai dari 0
         int limit1 = (jArrCoordinates.length() - 1); // - 1 karena array mulai dari 0
-        ct.Hitung_Bobot_Tambah_Simpul(index_koordinat_json, limit1, jArrCoordinates); // coordinate tengah sampai akhir
+        ct.hitungBobotTambahSimpul(index_koordinat_json, limit1, jArrCoordinates); // coordinate tengah sampai akhir
 
 
         // new array graph[6][0] = 4->777.4
         graph[(max_simpul_db+1)][0] = nodes1 + "->" + ct.bobot; //didefinisikan [0] karena index baru di graph[][]
 
         // buat dan simpan (new record) json koordinate yang baru ke DB
-        createAndSave_NewJsonCoordinate(start_loop1, limit1, jArrCoordinates, ++increase_row_id, (max_simpul_db + 1), nodes1, ct.bobot,
+        createAndSaveNewJsonCoordinate(start_loop1, limit1, jArrCoordinates, ++increase_row_id, (max_simpul_db + 1), nodes1, ct.bobot,
                 dbInsert, dbRead); // 502 : index record baru
 
         // return
@@ -369,9 +366,9 @@ public class TambahSimpul {
      * @return
      *  no return
      */
-    public void createAndSave_NewJsonCoordinate(int mulai, int limit, JSONArray jArrCoordinates,
-                                                int new_id, int field_simpul_awal, int field_simpul_akhir, double new_bobot,
-                                                SQLiteDatabase dbInsert, SQLiteDatabase dbRead) throws JSONException{
+    public void createAndSaveNewJsonCoordinate(int mulai, int limit, JSONArray jArrCoordinates,
+                                               int new_id, int field_simpul_awal, int field_simpul_akhir, double new_bobot,
+                                               SQLiteDatabase dbInsert, SQLiteDatabase dbRead) throws JSONException{
 
         // JSON for save new coordinate
         JSONObject json_baru = new JSONObject();

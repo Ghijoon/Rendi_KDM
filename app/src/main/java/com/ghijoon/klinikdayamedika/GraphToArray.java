@@ -1,7 +1,7 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
 
 import android.content.Context;

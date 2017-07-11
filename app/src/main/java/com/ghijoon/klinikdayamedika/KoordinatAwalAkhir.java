@@ -1,7 +1,7 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.widget.Toast;
 
-public class KoordinatAwalAkhir {
+public class KoordinatAwalAkhir extends Activity {
     // DB
     Cursor cursor;
 
@@ -45,7 +45,7 @@ public class KoordinatAwalAkhir {
      * @return
      *   JSON (index coordinates, nodes0, nodes1)
      */
-    public JSONObject Get_simpul(double latx, double lngx, Context context) throws JSONException {
+    public JSONObject getSimpul(double latx, double lngx, Context context) throws JSONException {
         // TODO Auto-generated constructor stub
 
         // your coordinate

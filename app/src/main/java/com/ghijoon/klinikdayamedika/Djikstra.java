@@ -1,7 +1,7 @@
 package com.ghijoon.klinikdayamedika;
 
 /**
- * Created by Ghijoon on 01-Jul-17.
+ * Created by Rendi on 01-Jul-17.
  */
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class Djikstra {
     String jalur_terpendek1 = "";
     String status = "none";
 
-    void jalurTerpendek(String[][] arg_graph, int simpulAwal, int simpulTujuan){
+    void jalurTercepat(String[][] arg_graph, int simpulAwal, int simpulTujuan){
 
         System.out.println("sa : " + simpulAwal + " & st : " + simpulTujuan);
         if(simpulAwal == simpulTujuan){
